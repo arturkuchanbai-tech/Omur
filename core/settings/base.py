@@ -19,7 +19,7 @@ if PRODUCTION:
 else:
     from .development import *
 
-DEBUG = not PRODUCTION
+DEBUG = True
 
 THEME_APPS = [
     "jazzmin",

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Service, ServicePrice, ServicePromotion, Promotion
+from .models import Service, ServicePrice, ServicePromotion, Promotion, Review, Doctor, ContactRequest
 
 class ServicePriceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,29 +16,72 @@ class ServiceCardSerializer(serializers.ModelSerializer):
         model = Service
         fields = ['id','title','slug','image']
 
+class ReviewSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        fields = ['id',
+                  'author',
+                  'text',
+                  'video',
+                  'photo',
+                  'created_at'
+                  ]
+
+class DoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['id',
+                  'full_name',
+                  'specialty',
+                  'photo',
+                  'description'
+                  ]
+        
+class ContactRequestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ContactRequest
+        fields = ['id',
+                  'name',
+                  'phone',
+                  'created_at'
+                  ]
+        
 class ServiceDetailSerializer(serializers.ModelSerializer):
-    price = ServicePriceSerializer(many=True)
+    prices = ServicePriceSerializer(many=True, read_only=True)
+    doctors = DoctorSerializer(many=True, read_only=True)
+    reviews = ReviewSerializer(many=True, read_only=True)
     promotion = serializers.SerializerMethodField()
     other_services = serializers.SerializerMethodField()
 
     class Meta:
         model = Service
         fields = ['id',
-                  'title',
-                  'description',
+                  'meta_title',
+                  'meta_description',
                   'slug',
                   'image',
-                  'short_description',
-                  'price',
+                  'meta_short_description',
+                  'order',
+                  'prices',
+                  'doctors',
+                  'reviews',
                   'promotion',
                   'other_services'
                   ]
-        def get_promotion(self, obj):
-            promotions = Promotion.objects.filter(
-                servicepromotion__service=obj
-            )
-            return PromotionSerializer(promotions, many=True).data
         
-        def get_other_services(self, obj):
-            services = Service.objects.exclude(id=obj.id)[:4]
-            return ServiceCardSerializer(services, many=True).data
+    def get_promotion(self, obj):
+        promotions = Promotion.objects.filter(
+            servicepromotion__service=obj
+        )
+        return PromotionSerializer(promotions, many=True).data
+        
+    def get_other_services(self, obj):
+        services = Service.objects.filter(
+            is_active=True
+            ).exclude(
+                id=obj.id
+                ).order_by('order')[:4]
+
+        return ServiceCardSerializer(
+            services,many=True
+            ).data
