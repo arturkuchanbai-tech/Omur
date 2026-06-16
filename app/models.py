@@ -53,7 +53,7 @@ class Doctor(models.Model):
 
 class RelatedService(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='related_services')
-    related = models.ForeignKey(Service, on_delete=models.CASCADE)
+    related = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='service-relations')
 
 class ContactRequest(models.Model):
     name = models.CharField(max_length=255)
