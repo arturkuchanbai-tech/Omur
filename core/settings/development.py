@@ -3,6 +3,8 @@ import os
 
 DEBUG = False
 
+DISABLE_SERVER_SIDE_CURSORS = True
+
 ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
 # DATABASES = {
