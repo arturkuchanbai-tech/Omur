@@ -1,24 +1,24 @@
 from rest_framework import serializers
-from .models import Service, ServicePrice, ServicePromotion, Promotion, Review, Doctor, ContactRequest
+from .models import Услуга, СервисПродвижение, СвязанныеУслуги,ЦенаУслуги, Продвижение,Отзыв, Врач, Контакты
 
 class ServicePriceSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ServicePrice
-        fields = ['id', 'name', 'price']
+        model = ЦенаУслуги
+        fields = ['id','name', 'price']
 
 class PromotionSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Promotion
+        model = Продвижение
         fields = ['id','title','description','image']
 
 class ServiceCardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Service
-        fields = ['id','title','slug','image']
+        model = Услуга
+        fields = ['id','meta_title','slug','image']
 
 class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Review
+        model = Отзыв
         fields = ['id',
                   'author',
                   'text',
@@ -29,7 +29,7 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Doctor
+        model = Врач
         fields = ['id',
                   'full_name',
                   'specialty',
@@ -39,7 +39,7 @@ class DoctorSerializer(serializers.ModelSerializer):
         
 class ContactRequestSerializer(serializers.ModelSerializer):
     class Meta:
-        model = ContactRequest
+        model = Контакты
         fields = ['id',
                   'name',
                   'phone',
@@ -54,7 +54,7 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
     other_services = serializers.SerializerMethodField()
 
     class Meta:
-        model = Service
+        model = Услуга
         fields = ['id',
                   'meta_title',
                   'meta_description',
@@ -70,13 +70,13 @@ class ServiceDetailSerializer(serializers.ModelSerializer):
                   ]
         
     def get_promotion(self, obj):
-        promotions = Promotion.objects.filter(
+        promotions = Продвижение.objects.filter(
             servicepromotion__service=obj
         )
         return PromotionSerializer(promotions, many=True).data
         
     def get_other_services(self, obj):
-        services = Service.objects.filter(
+        services = Услуга.objects.filter(
             is_active=True
             ).exclude(
                 id=obj.id
