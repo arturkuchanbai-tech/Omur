@@ -13,6 +13,7 @@ class Услуга(models.Model):
     class Meta:
         verbose_name = "Услуга"
         verbose_name_plural = "Услуги"
+        db_table = "app_service"
         ordering = ['order']
 
     def __str__(self):
@@ -26,6 +27,7 @@ class ЦенаУслуги(models.Model):
     class Meta:
         verbose_name = "ЦенаУслуги"
         verbose_name_plural = "ЦенаУслуг"
+        db_table ="app_serviceprice"
 
 class Продвижение(models.Model):
     title = models.CharField(max_length=255)
@@ -35,6 +37,8 @@ class Продвижение(models.Model):
     class Meta:
         verbose_name = "Продвижение"
         verbose_name_plural = "Продвижения"
+        db_table ="app_promotion"
+
 
 class СервисПродвижение(models.Model):
     service = models.ForeignKey(Услуга, on_delete=models.CASCADE, related_name='Продвижение')
@@ -43,6 +47,8 @@ class СервисПродвижение(models.Model):
     class Meta:
         verbose_name = "СервисПродолжение"
         verbose_name_plural = "СервисПродолжения"
+        db_table ="app_servicepromotion"
+
 
 class Отзыв(models.Model):
     service = models.ForeignKey(Услуга, on_delete=models.CASCADE, related_name='отзывы')
@@ -58,6 +64,7 @@ class Отзыв(models.Model):
     class Meta:
         verbose_name = "Отзыв"
         verbose_name_plural = "Отзывы"
+        db_table ="app_review"
 
 class Врач(models.Model):
     service = models.ManyToManyField(Услуга, related_name='Врачи')
@@ -72,6 +79,7 @@ class Врач(models.Model):
     class Meta:
         verbose_name = "Врач"
         verbose_name_plural = "Врачи"
+        db_table ="app_doctor"
 
 class СвязанныеУслуги(models.Model):
     service = models.ForeignKey(Услуга, on_delete=models.CASCADE, related_name='Связанные_услуги')
@@ -80,6 +88,8 @@ class СвязанныеУслуги(models.Model):
     class Meta:
         verbose_name = "СвязаннаяУслуга"
         verbose_name_plural = "СвязанныеУслуги"
+        db_table = "app_relatedservice"
+        
 
 class Контакты(models.Model):
     name = models.CharField(max_length=255)
@@ -93,3 +103,4 @@ class Контакты(models.Model):
     class Meta:
         verbose_name = "Контакт"
         verbose_name_plural = "Контакты"
+        db_table = "app_contactrequest"

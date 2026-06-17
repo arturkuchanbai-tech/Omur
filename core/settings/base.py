@@ -21,6 +21,8 @@ else:
 
 DEBUG = True
 
+DISABLE_SERVER_SIDE_CURSORS = True
+
 THEME_APPS = [
     "jazzmin",
 ]
